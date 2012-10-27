@@ -17,7 +17,7 @@ RSYNC_OPTS=(-avzP --rsh="ssh -p ${SSH_PORT}")
 SSH_OPTS="-p ${SSH_PORT}"
 RELEASE_DIR=$REMOTE_DIR/releases
 SHARED_DIR=$REMOTE_DIR/shared
-CURRENT_RELEASE=$RELEASE_DIR/`date +%Y%m%d%H%M%S`
+CURRENT_RELEASE=$RELEASE_DIR/$(date +%Y%m%d%H%M%S)
 CURRENT_RELEASE_LINK=$REMOTE_DIR/current
 VERSION="0.0.1"
 
@@ -27,7 +27,7 @@ function remote_cmd {
     cmd=$1
 
     for host in "${SSH_HOSTS[@]}"; do
-        log -e "\n** Remote exec [${host}]: ${cmd}"
+        log "\n** Remote exec [${host}]: ${cmd}"
         $SSH_CMD@$host $cmd 
     done
 }
@@ -40,14 +40,14 @@ function run_rsync {
             log "** Sync from \"${LOCAL_DIR}/public/\" to \"${SSH_USER}@${host}:${SHARED_DIR}/public/\""
             $RSYNC "${RSYNC_OPTS[@]}" $LOCAL_DIR/public/ $SSH_USER@$host:$SHARED_DIR/public/
         else
-            log "** Sync from \"${LOCAL_DIR}/\" to \"${SSH_USER}@${host}:${SHARED_DIR}/cached-copy/\""
+            echo "** Sync from \"${LOCAL_DIR}/\" to \"${SSH_USER}@${host}:${SHARED_DIR}/cached-copy/\""
             $RSYNC "${RSYNC_OPTS[@]}" --delete --exclude-from=$LOCAL_DIR/script/.rsync_exclude $LOCAL_DIR/ $SSH_USER@$host:$SHARED_DIR/cached-copy/
         fi
     done
 }
 
 function log {
-    echo $1 $2
+    echo -e $1
 }
 
 function run_hook {
@@ -64,9 +64,9 @@ function clean_old_releases {
 
         for (( i = 0; i < ${length}; i++ ))
         do
-            cmd="rm -rf ${array[$i]}"
-            log "** Remote exec [${host}]: ${cmd}"
-            #$SSH_CMD@$host $cmd 
+            cmd="rm -rf ${RELEASE_DIR}/${array[$i]}"
+            echo "** Remote exec [${host}]: ${cmd}"
+            $SSH_CMD@$host $cmd 
         done
     done
 }
@@ -115,7 +115,7 @@ if [[ $1 = "deploy" ]]; then
                 remote_cmd "/bin/rm -rf ${CURRENT_RELEASE}/${dirlink}; /bin/ln -s ${SHARED_DIR}/${dirlink} ${CURRENT_RELEASE}/${dirlink}"
             done
             run_hook "before_link"
-            remote_cmd "/bin/ln -sf ${CURRENT_RELEASE} ${CURRENT_RELEASE_LINK}"
+            remote_cmd "/bin/rm -f ${CURRENT_RELEASE_LINK}; /bin/ln -s ${CURRENT_RELEASE} ${CURRENT_RELEASE_LINK}"
             run_hook "after_link"
         fi
 
@@ -158,27 +158,27 @@ times=`expr ${END_TIME} - ${START_TIME}`
 
 if [[ $1 == "app" || $1 == "deploy" ]]; then
     log " >> Done."
-    log -e "\nTime: ${times} second(s)."
-fi
-
-if [[ $1 = "help" || $1 = "-h" || $1 = "--help" ]]; then
-    log "pac is a simple deployment tool with rsync and ssh, no scm required."
-    log -e "\nVersion ${VERSION}\nUsage:"
-    log -e "\t# setup and prepare the deployment on the target servers"
-    log -e "\tCFILE=/path/to/config.sh ${0} deploy setup\n"
-    log -e "\t# run a deployment"
-    log -e "\tCFILE=/path/to/config.sh ${0} deploy run\n"
-    log -e "\t# run a fake deployment, check what kind of things will be deployed"
-    log -e "\tCFILE=/path/to/config.sh ${0} deploy check\n"
-    log -e "\t# roll back the current deployment to a specified one"
-    log -e "\t# e.g. CFILE=./config.sh cap deploy backto 20121026110008"
-    log -e "\tCFILE=/path/to/config.sh ${0} deploy backto <release number>\n"
-    log -e "\tCFILE=/path/to/config.sh ${0} app [start|stop|restart|status]    #  app management with your hooks script"
-    exit 0
+    log "\nTime: ${times} second(s)."
 else
-    if [[ $1 != "" ]]; then
-        log "Invalid parameter $1 given"
+    if [[ $1 = "help" || $1 = "-h" || $1 = "--help" ]]; then
+        log "pac is a simple deployment tool with rsync and ssh, no scm required."
+        log "\nVersion ${VERSION}\nUsage:"
+        log "\t# setup and prepare the deployment on the target servers"
+        log "\tCFILE=/path/to/config.sh ${0} deploy setup\n"
+        log "\t# run a deployment"
+        log "\tCFILE=/path/to/config.sh ${0} deploy run\n"
+        log "\t# run a fake deployment, check what kind of things will be deployed"
+        log "\tCFILE=/path/to/config.sh ${0} deploy check\n"
+        log "\t# roll back the current deployment to a specified one"
+        log "\t# e.g. CFILE=./config.sh cap deploy backto 20121026110008"
+        log "\tCFILE=/path/to/config.sh ${0} deploy backto <release number>\n"
+        log "\tCFILE=/path/to/config.sh ${0} app [start|stop|restart|status]    #  app management with your hooks script"
+        exit 0
+    else
+        if [[ $1 != "" ]]; then
+            log "Invalid parameter $1 given"
+        fi
+        log "Usage: CFILE=/path/to/your/project/config.sh ${0} -h"
+        exit 1
     fi
-    log "Usage: CFILE=/path/to/your/project/config.sh ${0} -h"
-    exit 1
 fi
