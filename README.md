@@ -43,7 +43,7 @@ In your project directory, run:
 
     $ pac help
 
-### environment varialbe: PACFILE
+### environment variable: PACFILE
 
 The environment variable is using by pac to determine how to do the deployment, by default it will set it to the file ".pac/config.sh" based your current working directory, however, you can change this, e.g.:
 
