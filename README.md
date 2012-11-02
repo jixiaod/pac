@@ -3,11 +3,11 @@
 pac is a simple deployment tool with ssh and rsync, no scm tools required.
 It can work with any kind of projects which need to deploy to 1 or more \*nix servers.
 
-## Before Your Start
+## Before start
 
 You may need to create a ssh account (e.g. "www") on a local server (aka "deployment server"), then on the remote server(s), allow the ssh account to login via public ssh key instead of password, see [Setting up SSH public/private keys](http://www.ece.uci.edu/~chou/ssh-key.html) for more.
 
-## Quick Start
+## Quick start
 
 ### Installation
 
