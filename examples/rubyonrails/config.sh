@@ -9,6 +9,7 @@ RSYNC=/usr/bin/rsync
 SHARED_DIRS=(log tmp public/system)
 
 LOCAL_DIR=/home/me/rails/blog
+RSYNC_EXCLUDE_FILE=$HOOKS_DIR/rsync_exclude
 HOOKS_DIR=/path/to/here/hooks
 REMOTE_DIR=/opt/srv/rails-blog
 LIMIT_RELEASES=3
