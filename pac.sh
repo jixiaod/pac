@@ -67,7 +67,7 @@ fi
 if [[ -f $PACFILE ]]; then
     . $PACFILE
 else
-    echo "pac: a simple deployment tool fits any kind of projects."
+    echo "pac: pac is a simple deployment tool with rsync and ssh, no scm tools required."
     echo "--------------------------------------------------------"
     echo "Notice: It seems that the PACFILE \"${PACFILE}\" doesn't exists."
     echo "Run \"PACFILE=/path/to/your/project/config.sh ${0} -h\" to see more options."
@@ -233,7 +233,7 @@ if [[ $1 == "app" || $1 == "deploy" ]]; then
     log "\nTime: ${times} second(s)."
 else
     if [[ $1 = "help" || $1 = "-h" || $1 = "--help" ]]; then
-        log "pac is a simple deployment tool with rsync and ssh, no scm required."
+        log "pac is a simple development tool with ssh and rsync, no scm tools required."
         log "\nVersion ${VERSION}\nUsage:"
         log "\t# setup and prepare the deployment on the target servers"
         log "\tPACFILE=/path/to/config.sh ${0} deploy setup\n"
