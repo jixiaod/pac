@@ -22,6 +22,7 @@ You may need to create a ssh account (e.g. "www") on a local server (aka "deploy
 ### Change your pac settings in the directory ".pac/" 
 
 There is a main configuration file called "config.sh", you can open and change the basic settings. Also, there is a "hooks" directory, you can put some hook functions there.
+To exclude some files to deploy, you can update the file "hooks/rsync\_exclude".
 You can check the [examples](https://github.com/xianhuazhou/pac/tree/master/examples) direcotry for more.
 
 ### Prepare for the first deploymet 

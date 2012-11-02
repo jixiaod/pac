@@ -52,10 +52,29 @@ LIMIT_RELEASES=3
 " > $PAC_CONFIG_FILE
     fi
     if [[ ! -f "$PAC_DIR/hooks/rsync_exclude" ]]; then
-        echo "*.swp" > "$PAC_DIR/hooks/rsync_exclude"
+        echo "*.swp
+*.log
+*.git/
+*.svn/
+CVS/
+RCS/
+SCCS/
+.cvsignore
+.arch-ids/
+.hg
+.hgignore
+.hgrags
+.bzr
+.bzrignore
+.bzrtags
+_darcs
+*~
+" > "$PAC_DIR/hooks/rsync_exclude"
     fi
-    echo "The pac directory \".pac\" and a basic config file has been created."
-    echo "Done."
+    echo "pac initialize has been done."
+    echo "The pac directory \".pac\" and some related files has been created."
+    echo "You can go and change the files in the directory before you get started."
+    echo ""
     exit 0
 fi
 
