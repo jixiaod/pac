@@ -14,7 +14,7 @@ You may need to create a ssh account (e.g. "www") on a local server (aka "deploy
     # wget https://raw.github.com/xianhuazhou/pac/master/pac.sh -O /usr/bin/pac
     # chmod +x /usr/bin/pac
 
-### Initialize
+### Initialization
 
     $ cd /path/to/your/project
     $ pac init
