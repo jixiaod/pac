@@ -11,16 +11,21 @@ SSH_HOSTS=(ssh.host1.com ssh.host2.com)
 RSYNC=/usr/bin/rsync
 
 # shared dirs will be linked to a shared directory
-SHARED_DIRS=(log tmp files/shared)
+# SHARED_DIRS=(log tmp files/shared)
+SHARED_DIRS=()
 
 # your project directory
 LOCAL_DIR=/path/to/your/project
 
 # pac hooks directory which contains "app.sh" and "deploy.sh".
-HOOKS_DIR=$LOCAL_DIR/scripts/pac-hooks
+HOOKS_DIR=$LOCAL_DIR/.pac/hooks
 
-# where to deploy your app
+# files list here will be ignored when deploy
+RSYNC_EXCLUDE_FILE=$HOOKS_DIR/rsync_exclude
+
+# where to deploy your app?
 REMOTE_DIR=/opt/srv/yourapp
 
 # number of latest releases to keep
 LIMIT_RELEASES=3
+
