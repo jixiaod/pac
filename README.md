@@ -31,7 +31,7 @@ In your project directory, run:
 
     $ pac deploy setup 
 
-### Do a fake deployment to see what kind of files will be deployed to your server
+### Do a fake deployment to see what kind of files will be deployed to your servers
 
     $ pac deploy
 
