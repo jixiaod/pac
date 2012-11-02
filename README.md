@@ -1,6 +1,6 @@
 # pac
 
-pac is a simple development tool with ssh and rsync, no scm tools required.
+pac is a simple deployment tool with ssh and rsync, no scm tools required.
 It can work with any kind of projects which need to deploy to 1 or more \*nix servers.
 
 ## Before Your Start
