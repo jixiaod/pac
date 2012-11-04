@@ -3,6 +3,12 @@
 # cap.reverse :-) #
 VERSION="0.0.1"
 
+if [[ $(which realpath) = '' ]]; then
+    echo "Error: pac can't find the \"realpath\" command."
+    echo "Please install the \"realpath\" package first."
+    exit 1
+fi
+
 if [[ $1 = "version" || $1 = "-v" || $1 = "--version" ]]; then
     echo "pac version: ${VERSION}"
     exit 0
@@ -69,6 +75,7 @@ SCCS/
 .bzrtags
 _darcs
 *~
+.pac/
 " > "$PAC_DIR/hooks/rsync_exclude"
     fi
     echo "pac initialize has been done."
