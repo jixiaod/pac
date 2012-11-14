@@ -48,3 +48,8 @@ In your project directory, run:
 The environment variable is using by pac to determine how to do the deployment, by default it will set it to the file ".pac/config.sh" based your current working directory, however, you can change this, e.g.:
 
     $ PACFILE=/path/to/somewhere/pac/config.sh pac deploy
+
+### Other deployment tools
+
+[Capistrano](https://github.com/capistrano/capistrano)
+[Capifony](http://capifony.org/)

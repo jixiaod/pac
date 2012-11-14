@@ -67,6 +67,7 @@ RCS/
 SCCS/
 .cvsignore
 .arch-ids/
+.gitignore
 .hg
 .hgignore
 .hgrags
@@ -78,6 +79,93 @@ _darcs
 .pac/
 " > "$PAC_DIR/hooks/rsync_exclude"
     fi
+
+    if [[ ! -f "$PAC_DIR/hooks/app.sh" ]]; then
+        echo '#!/bin/bash
+
+# this file contains your app related tasks such as start, stop your app.
+# it may useful if the app build with Rails, NodeJS etc. frameworks. 
+#
+# Usage: 
+#       pac app <FUNCTION NAME>
+#    e.g.
+#       pac app start
+#       pac app stop
+#       pac app restart
+# 
+#       pac app status 
+# 
+# some useful available variables related to remote servers:
+#     $CURRENT_RELEASE_LINK   =>  /path/to/your/project/current/
+#     $CURRENT_RELEASE        =>  /path/to/your/project/releases/xxxxxxxx
+#     $RELEASE_DIR            =>  /path/to/your/project/releases
+#     $SHARED_DIR             =>  /path/to/your/project/shared
+#
+
+# start app
+function start {
+    # remote_cmd "${CURRENT_RELEASE_LINK}/bin/yourapp start"
+    :
+}
+
+# stop app 
+function stop {
+    # remote_cmd "${CURRENT_RELEASE_LINK}/bin/yourapp stop"
+    :
+}
+
+# restart app
+function restart {
+    # remote_cmd "${CURRENT_RELEASE_LINK}/bin/yourapp restart"
+    :
+}
+
+## you can also add any custom functions like below:
+
+function status {
+    # remote_cmd "ps aux | grep <your app>"
+    :
+}
+
+# list all of current releases
+function releases {
+    remote_cmd "ls -al ${RELEASE_DIR}"
+}
+' > "$PAC_DIR/hooks/app.sh"
+    fi
+
+    if [[ ! -f "$PAC_DIR/hooks/deploy.sh" ]]; then
+        echo '#!/bin/bash
+# this file contains 4 callback functions which can be called by pac during the deployment life.
+# you can add your own code here ...
+
+# step 1
+function before_deploy {
+    # echo "it will be executed before start a deployment."
+    :
+}
+
+# step 2
+function before_link {
+    # echo "it will be executed before a symbol link is created."
+    # remote_cmd "RAILS_ENV=production; cd ${CURRENT_RELEASE} && /usr/local/bin/bundle install && /usr/local/bin/rake assets:precompile"
+    :
+}
+
+# step 3
+function after_link {
+    # echo "it will be executed after a symbol link is created."
+    :
+}
+
+# step 4
+function after_deploy {
+    # echo "it will be executed after a deployment is finished."
+    :
+}
+        ' > "$PAC_DIR/hooks/deploy.sh"
+    fi
+
     echo "pac initialize has been done."
     echo "The pac directory \".pac\" and some related files has been created."
     echo "You can go and change the files in the directory before you get started."
@@ -168,22 +256,22 @@ function clean_old_releases {
     done
 }
 
-START_TIME=$(date +%s)
+START_TIME=$(/bin/date +%s)
 
-# deploy it
+# deploy
 if [[ $1 = "deploy" ]]; then
     [[ -f $HOOKS_DIR/deploy.sh ]] && . $HOOKS_DIR/deploy.sh
     if [[ $2 = "setup" ]]; then
         log ">> Deployment setup ..."
 
-        # join the array with ","
-
-        ORIGIN_IFS=$IFS
-        IFS=","
-        MY_SHARED_DIRS="${SHARED_DIRS[*]},cached-copy"
-        IFS=$ORIGIN_IFS
-
-        remote_cmd "/bin/mkdir -p ${SHARED_DIR}/{${MY_SHARED_DIRS}} ${RELEASE_DIR}"
+        remote_cmd "/bin/mkdir -p ${SHARED_DIR}/cached-copy ${RELEASE_DIR}"
+        for link in "${SHARED_DIRS[@]}"; do
+            if [[ "${link}" == *"."* ]]; then
+                remote_cmd "echo > ${SHARED_DIR}/${link}"
+            else
+                remote_cmd "/bin/mkdir -p ${SHARED_DIR}/${link}"
+            fi
+        done
     else
         if [[ $2 != "run" ]]; then
             RSYNC_OPTS+=(--dry-run)
