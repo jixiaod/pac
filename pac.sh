@@ -136,7 +136,7 @@ function releases {
 
     if [[ ! -f "$PAC_DIR/hooks/deploy.sh" ]]; then
         echo '#!/bin/bash
-# this file contains 4 callback functions which can be called by pac during the deployment life.
+# this file contains 6 callback functions which can be called by pac during the deployment life.
 # you can add your own code here ...
 
 # step 1
@@ -161,6 +161,21 @@ function after_link {
 # step 4
 function after_deploy {
     # echo "it will be executed after a deployment is finished."
+    :
+}
+
+
+### DEPLOYMENT SETUP ###
+
+# step 1
+function before_setup {
+    # echo "it will be executed before the deployment setup."
+    :
+}
+
+# step 2
+function after_setup {
+    # echo "it will be executed after the deployment setup."
     :
 }
         ' > "$PAC_DIR/hooks/deploy.sh"
@@ -264,6 +279,7 @@ if [[ $1 = "deploy" ]]; then
     if [[ $2 = "setup" ]]; then
         log ">> Deployment setup ..."
 
+        run_hook "before_setup"
         remote_cmd "mkdir -p ${SHARED_DIR}/cached-copy ${RELEASE_DIR}"
         for link in "${SHARED_DIRS[@]}"; do
             if [[ "${link}" == *"."* ]]; then
@@ -275,6 +291,7 @@ if [[ $1 = "deploy" ]]; then
                 remote_cmd "mkdir -p ${SHARED_DIR}/${link}"
             fi
         done
+        run_hook "after_setup"
     else
         if [[ $2 != "run" ]]; then
             RSYNC_OPTS+=(--dry-run)

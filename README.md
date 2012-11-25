@@ -9,7 +9,7 @@ You may need to create a ssh account (e.g. "www") on a local server (aka "deploy
 
 ## Quick start
 
-### Installation
+### Installation / Update
 
     # wget https://raw.github.com/xianhuazhou/pac/master/pac.sh -O /usr/bin/pac
     # chmod +x /usr/bin/pac
