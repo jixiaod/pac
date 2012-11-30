@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # cap.reverse :-) #
-VERSION="0.0.1"
+VERSION="0.0.2"
 
 if [[ $(which realpath) = '' ]]; then
     echo "Error: pac can't find the \"realpath\" command."
@@ -207,7 +207,13 @@ function quit {
 function remote_cmd {
     local cmd=$1
 
-    for host in "${SSH_HOSTS[@]}"; do
+    if [[ $2 != "" ]]; then
+        local hosts=("${2}")
+    else
+        local hosts=("${SSH_HOSTS[@]}")
+    fi
+
+    for host in "${hosts[@]}"; do
         log "! Remote exec [${host}]: ${cmd}"
         $SSH_CMD@$host $cmd 
         if [[ $? != 0 ]]; then
@@ -257,6 +263,12 @@ function clean_old_releases {
 }
 
 START_TIME=$(/bin/date +%s)
+
+# run a remote command
+if [[ $1 == "run" ]]; then
+    remote_cmd "$2" "$3"
+    exit $?
+fi
 
 # deploy
 if [[ $1 = "deploy" ]]; then

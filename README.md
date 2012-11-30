@@ -39,6 +39,10 @@ In your project directory, run:
 
     $ pac deploy run
 
+### Run a remote command
+    $ pac run "ls" # run the command in all servers
+    $ pac run "ps aux" your-remote-server.name # run only in the specified server
+
 ### help 
 
     $ pac help
