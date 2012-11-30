@@ -136,7 +136,7 @@ function releases {
 
     if [[ ! -f "$PAC_DIR/hooks/deploy.sh" ]]; then
         echo '#!/bin/bash
-# this file contains 4 callback functions which can be called by pac during the deployment life.
+# this file contains 6 callback functions which can be called by pac during the deployment life.
 # you can add your own code here ...
 
 # step 1
@@ -161,6 +161,21 @@ function after_link {
 # step 4
 function after_deploy {
     # echo "it will be executed after a deployment is finished."
+    :
+}
+
+
+### DEPLOYMENT SETUP ###
+
+# step 1
+function before_setup {
+    # echo "it will be executed before the deployment setup."
+    :
+}
+
+# step 2
+function after_setup {
+    # echo "it will be executed after the deployment setup."
     :
 }
         ' > "$PAC_DIR/hooks/deploy.sh"
@@ -262,7 +277,7 @@ function clean_old_releases {
     done
 }
 
-START_TIME=$(/bin/date +%s)
+START_TIME=$(date +%s)
 
 # run a remote command
 if [[ $1 == "run" ]]; then
@@ -276,14 +291,19 @@ if [[ $1 = "deploy" ]]; then
     if [[ $2 = "setup" ]]; then
         log ">> Deployment setup ..."
 
-        remote_cmd "/bin/mkdir -p ${SHARED_DIR}/cached-copy ${RELEASE_DIR}"
+        run_hook "before_setup"
+        remote_cmd "mkdir -p ${SHARED_DIR}/cached-copy ${RELEASE_DIR}"
         for link in "${SHARED_DIRS[@]}"; do
             if [[ "${link}" == *"."* ]]; then
-                remote_cmd "echo > ${SHARED_DIR}/${link}"
+                linkfile="${SHARED_DIR}/${link}"
+                directory=`dirname ${linkfile}`
+                remote_cmd "mkdir -p ${directory}"
+                remote_cmd "echo > ${linkfile}"
             else
-                remote_cmd "/bin/mkdir -p ${SHARED_DIR}/${link}"
+                remote_cmd "mkdir -p ${SHARED_DIR}/${link}"
             fi
         done
+        run_hook "after_setup"
     else
         if [[ $2 != "run" ]]; then
             RSYNC_OPTS+=(--dry-run)
@@ -304,17 +324,17 @@ if [[ $1 = "deploy" ]]; then
         else
             run_rsync "deploy"
             if [[ $RUN = "Y" ]]; then
-                remote_cmd "/bin/cp -r -p ${SHARED_DIR}/cached-copy ${CURRENT_RELEASE}"
+                remote_cmd "cp -r -p ${SHARED_DIR}/cached-copy ${CURRENT_RELEASE}"
             fi
         fi
 
         # after the real deployment
         if [[ $RUN = "Y" ]]; then
             for dirlink in "${SHARED_DIRS[@]}"; do
-                remote_cmd "/bin/rm -rf ${CURRENT_RELEASE}/${dirlink}; /bin/ln -s ${SHARED_DIR}/${dirlink} ${CURRENT_RELEASE}/${dirlink}"
+                remote_cmd "rm -rf ${CURRENT_RELEASE}/${dirlink}; ln -s ${SHARED_DIR}/${dirlink} ${CURRENT_RELEASE}/${dirlink}"
             done
             run_hook "before_link"
-            remote_cmd "/bin/rm -f ${CURRENT_RELEASE_LINK}; /bin/ln -s ${CURRENT_RELEASE} ${CURRENT_RELEASE_LINK}"
+            remote_cmd "rm -f ${CURRENT_RELEASE_LINK}; ln -s ${CURRENT_RELEASE} ${CURRENT_RELEASE_LINK}"
             run_hook "after_link"
         fi
 
