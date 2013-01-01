@@ -24,7 +24,7 @@ There is a main configuration file called "config.sh", you can open and change t
 To exclude some files to deploy, you can update the file "hooks/rsync\_exclude".
 You can check the [examples](https://github.com/xianhuazhou/pac/tree/master/examples) direcotry for more.
 
-### Prepare for the first deploymet 
+### Prepare for the first deployment 
 
 In your project directory, run:
 
