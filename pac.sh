@@ -220,7 +220,7 @@ function quit {
 }
 
 function remote_cmd {
-    local cmd=$1
+    local cmd="bash --login -c '$1'"
 
     if [[ $2 != "" ]]; then
         local hosts=("${2}")
