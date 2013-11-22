@@ -1,7 +1,6 @@
 # pac
 
-pac is a simple deployment tool with ssh and rsync, no scm tools required.
-It can work with any kind of projects which need to deploy to 1 or more \*nix servers.
+pac is a simple deployment tool with ssh and rsync, no scm tools required. It can work with any kind of projects which need to deploy to 1 or more \*nix servers.
 
 ## Before start
 
@@ -25,7 +24,7 @@ There is a main configuration file called "config.sh", you can open and change t
 To exclude some files to deploy, you can update the file "hooks/rsync\_exclude".
 You can check the [examples](https://github.com/xianhuazhou/pac/tree/master/examples) direcotry for more.
 
-### Prepare for the first deploymet 
+### Prepare for the first deployment 
 
 In your project directory, run:
 
@@ -52,6 +51,13 @@ In your project directory, run:
 The environment variable is using by pac to determine how to do the deployment, by default it will set it to the file ".pac/config.sh" based your current working directory, however, you can change this, e.g.:
 
     $ PACFILE=/path/to/somewhere/pac/config.sh pac deploy
+
+### deploy to other environments (e.g. staging)
+
+    $ cd /path/to/your/project
+    $ cp .pac/config.sh .pac/staging_config.sh # edit .pac/staging_config.sh
+    $ PACFILE=.pac/staging_config.sh pac deploy setup
+    $ PACFILE=.pac/staging_config.sh pac deploy run
 
 ### Other deployment tools
 
