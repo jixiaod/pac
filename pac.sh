@@ -334,7 +334,7 @@ if [[ $1 = "deploy" ]]; then
                 remote_cmd "rm -rf ${CURRENT_RELEASE}/${dirlink} && ln -s ${SHARED_DIR}/${dirlink} ${CURRENT_RELEASE}/${dirlink}"
             done
             run_hook "before_link"
-            remote_cmd "rm -f ${CURRENT_RELEASE_LINK}; ln -s ${CURRENT_RELEASE} ${CURRENT_RELEASE_LINK}"
+            remote_cmd "rm -f ${CURRENT_RELEASE_LINK} && ln -s ${CURRENT_RELEASE} ${CURRENT_RELEASE_LINK}"
             run_hook "after_link"
         fi
 
