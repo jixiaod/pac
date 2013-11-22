@@ -331,7 +331,7 @@ if [[ $1 = "deploy" ]]; then
         # after the real deployment
         if [[ $RUN = "Y" ]]; then
             for dirlink in "${SHARED_DIRS[@]}"; do
-                remote_cmd "rm -rf ${CURRENT_RELEASE}/${dirlink}; ln -s ${SHARED_DIR}/${dirlink} ${CURRENT_RELEASE}/${dirlink}"
+                remote_cmd "rm -rf ${CURRENT_RELEASE}/${dirlink} && ln -s ${SHARED_DIR}/${dirlink} ${CURRENT_RELEASE}/${dirlink}"
             done
             run_hook "before_link"
             remote_cmd "rm -f ${CURRENT_RELEASE_LINK}; ln -s ${CURRENT_RELEASE} ${CURRENT_RELEASE_LINK}"
