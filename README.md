@@ -8,6 +8,12 @@ You may need to create a ssh account (e.g. "www") on a local server (aka "deploy
 
 ## Quick start
 
+### Requirements
+
+Depending on your OS, `realpath` is required for the current version of pac. e.g. (on Debian/Ubuntu):
+
+    # apt-get install realpath
+
 ### Installation / Update
 
     # wget https://raw.github.com/xianhuazhou/pac/master/pac.sh -O /usr/bin/pac
@@ -41,6 +47,11 @@ In your project directory, run:
 ### Run a remote command
     $ pac run "ls" # run the command in all servers
     $ pac run "ps aux" your-remote-server.name # run only in the specified server
+
+### Run app related commands
+
+app related commands defined in the hooks/app.sh file,
+    $ pac app [start|stop|restart|...]
 
 ### help 
 
