@@ -1,10 +1,10 @@
 # pac
 
-pac is a simple deployment tool with ssh and rsync, no scm tools required. It can work with any kind of projects which need to deploy to 1 or more \*nix servers.
+pac is a simple deployment tool with ssh and rsync, no scm tools required. It could work with any kind of projects which need to deploy to 1 or more \*nix servers.
 
 ## Before start
 
-You may need to create a ssh account (e.g. "www") on a local server (aka "deployment server"), then on the remote server(s), allow the ssh account to login via public ssh key instead of password, see [Setting up SSH public/private keys](http://www.ece.uci.edu/~chou/ssh-key.html) for more.
+You may need to create a ssh account (e.g. "www") on a local server (aka "deployment server"), then on the remote server(s), allow the ssh account to login via public ssh key instead of password, see [Setting up SSH public/private keys](https://help.ubuntu.com/community/SSH/OpenSSH/Keys) for more.
 
 ## Quick start
 
@@ -30,7 +30,7 @@ There is a main configuration file called "config.sh", you can open and change t
 To exclude some files to deploy, you can update the file "hooks/rsync\_exclude".
 You can check the [examples](https://github.com/xianhuazhou/pac/tree/master/examples) direcotry for more.
 
-### Prepare for the first deployment 
+### Preparing for the first deployment 
 
 In your project directory, run:
 
@@ -71,6 +71,29 @@ The environment variable is using by pac to determine how to do the deployment, 
     $ cp .pac/config.sh .pac/staging_config.sh # edit .pac/staging_config.sh
     $ PACFILE=.pac/staging_config.sh pac deploy setup
     $ PACFILE=.pac/staging_config.sh pac deploy run
+
+### How it works
+
+It works as follows:
+
+* pac will synchronize your project files to remote servers with rsync for each release. 
+* Run some hooks such as compile/merging js/css files.
+* Link to the latest relase.
+* Reload/Restart your app and run some other hooks if needed.
+* Remove old releases and done.
+
+### Run some specified commands with sudo without password on Remote servers?
+
+Do as follows:
+
+    # sudoedit /etc/sudoers
+
+    Then add something like:
+    www-data ALL=NOPASSWD: /etc/init.d/php-fpm,/etc/init.d/nginx
+
+    and save it.
+
+Then the user `www-data` can run commands like `sudo /etc/init.d/php-fpm reload` without password.
 
 ### Other deployment tools
 
