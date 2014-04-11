@@ -45,12 +45,14 @@ In your project directory, run:
     $ pac deploy run
 
 ### Run a remote command
+
     $ pac run "ls" # run the command in all servers
     $ pac run "ps aux" your-remote-server.name # run only in the specified server
 
 ### Run app related commands
 
-app related commands defined in the hooks/app.sh file,
+app related commands defined in the hooks/app.sh file.
+
     $ pac app [start|stop|restart|...]
 
 ### help 
