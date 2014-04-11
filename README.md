@@ -10,13 +10,16 @@ You may need to create a ssh account (e.g. "www") on a local server (aka "deploy
 
 ### Requirements
 
-Depending on your OS, `realpath` is required for the current version of pac. e.g. (on Debian/Ubuntu):
+Depending on your OS, `realpath` is required for the current version of pac on your deployment server. e.g. (on Debian/Ubuntu):
 
     # apt-get install realpath
 
 ### Installation / Update
 
     # wget https://raw.github.com/xianhuazhou/pac/master/pac.sh -O /usr/bin/pac
+    or with curl
+    # curl https://raw.github.com/xianhuazhou/pac/master/pac.sh > /usr/bin/pac
+
     # chmod +x /usr/bin/pac
 
 ### Initialization
